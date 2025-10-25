@@ -1,32 +1,18 @@
 package musi
 
-import com.github.mnemotechnician.mkui.extensions.dsl.textButton
-import mindustry.Vars
-import mindustry.ui.dialogs.SettingsMenuDialog
-import mindustry.ui.dialogs.SettingsMenuDialog.SettingsTable
-import mindustry.ui.dialogs.SettingsMenuDialog.SettingsTable.Setting
+import arc.*
+import mindustry.*
 
 object MusiSettings {
     fun load(){
         Vars.ui.settings.addCategory("MusiChaos"){t ->
-            t.checkPref("includeunspecifiedtracks", false){
-                MusiVars.includeUnspecifiedTracks = it
-            }
-        
-            t.buttonPref("reloadtracks"){
+            t.checkPref("includeunspecifiedtracks", false)
+
+            t.checkPref("reloadtracks", false, {
                 MusiVars.handleTracks()
-            }
-        }
-    }
-
-    fun SettingsTable.buttonPref(name: String, onClick: () -> Unit) = this.pref(ButtonSetting(name, onClick))
-
-    open class ButtonSetting(name: String, var onClick: () -> Unit): Setting(name){
-
-        override fun add(table: SettingsMenuDialog.SettingsTable) {
-            table.textButton(title, wrap = false){
-                onClick()
-            }.growX().row()
+                Core.settings.put("reloadtracks", false)
+                t.rebuild()
+            } )
         }
     }
 }

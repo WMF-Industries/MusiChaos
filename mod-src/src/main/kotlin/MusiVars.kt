@@ -1,20 +1,14 @@
 package musi
 
-import arc.Core
-import arc.util.Log
-import arc.audio.Music
+import arc.*
+import arc.util.*
+import arc.audio.*
 import arc.files.*
 import arc.struct.*
-import arc.util.ArcRuntimeException
-import mindustry.Vars
-import com.github.mnemotechnician.mkui.delegates.setting
+import mindustry.*
 
 @Suppress("MemberVisibilityCanBePrivate", "SpellCheckingInspection")
 object MusiVars {
-    val syn = "musichaos-"
-    
-    var includeUnspecifiedTracks by setting(false, syn)
-    
     //cache for builtin tracks
     val ambientMusicCache = Seq<Music>()
     val darkMusicCache = Seq<Music>()
@@ -50,7 +44,7 @@ object MusiVars {
             else -> {
                 Log.info("Unspecified music file: ${file.name()}")
 
-                if(includeUnspecifiedTracks){
+                if(Core.settings.getBool("includeunspecifiedtracks", false)){
                     val unspec = loadMusicFile(file)
                     val builtins = arrayOf(sounds.ambientMusic, sounds.darkMusic, sounds.bossMusic)
 
@@ -111,6 +105,7 @@ object MusiVars {
             file.extension().equals("zip") -> loadMusicPack(file)
             file.extension().equals("mp3") -> addTrack(file)
             file.extension().equals("ogg") -> addTrack(file)
+
             file.isDirectory -> loadMusicFolder(file)
             else -> Log.warn("Unknown file: ${file.name()}. Skipping.")
         }
@@ -118,6 +113,7 @@ object MusiVars {
     
     fun load(){
         Log.info("Caching original tracks...")
+
         ambientMusicCache.add(Vars.control.sound.ambientMusic)
         darkMusicCache.add(Vars.control.sound.darkMusic)
         bossMusicCache.add(Vars.control.sound.bossMusic)
@@ -128,7 +124,8 @@ object MusiVars {
         val path = Core.settings.dataDirectory.child("musichaos")
         val sounds = Vars.control.sound
 
-        if(!path.exists()) path.mkdirs()
+        if(!path.exists())
+            path.mkdirs()
         
         sounds.ambientMusic.clear().add(ambientMusicCache)
         sounds.darkMusic.clear().add(darkMusicCache)

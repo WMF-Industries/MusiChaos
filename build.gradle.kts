@@ -20,15 +20,15 @@ allprojects {
 		// Repositories to download dependencies from.
 		// Do not remove anything other than mavenLocal unless you knoa what you're doing
 		mavenCentral()
-		mavenLocal()
+
+        maven("https://maven.xpdustry.com/mindustry")
 		maven("https://raw.githubusercontent.com/Zelaux/MindustryRepo/master/repository")
 		maven("https://jitpack.io")
 	}
 
 	dependencies {
-		compileOnly("com.github.Anuken.Arc", "arc-core", "v146")
-		compileOnly("com.github.Anuken", "Mindustry", "v146")
-		implementation("com.github.mnemotechnician", "mkui", "v1.2.2")
+		compileOnly("com.github.Anuken.Arc", "arc-core", "v152.2")
+		compileOnly("com.github.Anuken", "mindustry", "v152.2")
 	}
 
 	tasks.withType<JavaCompile> {
